@@ -10,16 +10,16 @@ def optimize_cap_height(R, num_caps, tolerance=1e-6):
     h_min = 0.0
     h_max = R
     h_mid = (h_min + h_max) / 2.0
-    
+
     while h_max - h_min > tolerance:
         h_mid = (h_min + h_max) / 2.0
         total_area = total_surface_area_of_caps(R, h_mid, num_caps)
-        
+
         if total_area > 4 * math.pi * R * R:
             h_max = h_mid
         else:
             h_min = h_mid
-    
+
     return h_mid
 
 def phi_from_height(h, R):
@@ -31,7 +31,7 @@ def arc_length_from_phi(phi, R):
 def main():
     R = 1.0  # You can change the radius of the sphere here
 
-    num_caps_list = [2, 4, 6, 8, 12]
+    num_caps_list = [2, 4, 6, 8, 12, 20]
 
     print(f"For a sphere with radius R = {R}:")
     for num_caps in num_caps_list:
