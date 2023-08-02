@@ -39,7 +39,7 @@ def main():
         phi = phi_from_height(cap_height, R)
         arc_length = arc_length_from_phi(phi, R)
         print(f"Number of Caps: {num_caps}, Optimal Cap Height Fraction: {cap_height:.6f}"
-              f", phi: {phi:.6f}, L: {arc_length:.6f}")
+              f", phi: {math.degrees(phi):.6f}, L: {arc_length:.6f}")
 
 if __name__ == "__main__":
     main()
