@@ -24,6 +24,17 @@ def optimize_cap_height(R, num_caps, tolerance=1e-6):
     
     return h_mid
 
+def spherical_cap_coordinates(R, num_caps):
+    cap_height = optimize_cap_height(R, num_caps)
+    cap_theta = np.linspace(0, 2 * np.pi, num_caps, endpoint=False)
+    cap_phi = np.arccos(cap_height / R)
+
+    cap_centers_x = R * np.sin(cap_phi) * np.cos(cap_theta)
+    cap_centers_y = R * np.sin(cap_phi) * np.sin(cap_theta)
+    cap_centers_z = R * np.cos(cap_phi)
+
+    return cap_centers_x, cap_centers_y, cap_centers_z
+
 def plot_spherical_caps_on_sphere(R, num_caps):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
@@ -36,16 +47,10 @@ def plot_spherical_caps_on_sphere(R, num_caps):
     y = R * np.sin(phi) * np.sin(theta)
     z = R * np.cos(phi)
 
-    cap_height = optimize_cap_height(R, num_caps)
-    cap_surface_area = 2 * np.pi * R * cap_height
+    cap_centers_x, cap_centers_y, cap_centers_z = spherical_cap_coordinates(R, num_caps)
 
     for i in range(num_caps):
-        cap_theta = 2 * np.pi * i / num_caps
-        cap_center_x = R * np.cos(cap_theta)
-        cap_center_y = R * np.sin(cap_theta)
-        cap_center_z = R * np.cos(np.arccos(cap_height / R))
-
-        ax.plot_surface(x + cap_center_x, y + cap_center_y, z + cap_center_z, color='b', alpha=0.4)
+        ax.plot_surface(x + cap_centers_x[i], y + cap_centers_y[i], z + cap_centers_z[i], color='b', alpha=0.4)
 
     ax.set_xlim([-R, R])
     ax.set_ylim([-R, R])
@@ -55,7 +60,7 @@ def plot_spherical_caps_on_sphere(R, num_caps):
 
 def main():
     R = 1.0  # Change the radius of the sphere here
-    num_caps = 6  # Change the number of caps here
+    num_caps = 4  # Change the number of caps here
 
     plot_spherical_caps_on_sphere(R, num_caps)
 
