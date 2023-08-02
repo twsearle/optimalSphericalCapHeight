@@ -33,7 +33,9 @@ def spherical_cap_coordinates(R, num_caps):
     cap_centers_y = R * np.sin(cap_phi) * np.sin(cap_theta)
     cap_centers_z = R * np.cos(cap_phi)
 
-    return cap_centers_x, cap_centers_y, cap_centers_z
+    cap_centers = np.column_stack((cap_centers_x, cap_centers_y, cap_centers_z))
+
+    return cap_centers
 
 def plot_spherical_caps_on_sphere(R, num_caps):
     fig = plt.figure()
@@ -47,10 +49,10 @@ def plot_spherical_caps_on_sphere(R, num_caps):
     y = R * np.sin(phi) * np.sin(theta)
     z = R * np.cos(phi)
 
-    cap_centers_x, cap_centers_y, cap_centers_z = spherical_cap_coordinates(R, num_caps)
+    cap_centers = spherical_cap_coordinates(R, num_caps)
 
-    for i in range(num_caps):
-        ax.plot_surface(x + cap_centers_x[i], y + cap_centers_y[i], z + cap_centers_z[i], color='b', alpha=0.4)
+    for center in cap_centers:
+        ax.plot_surface(x + center[0], y + center[1], z + center[2], color='b', alpha=0.4)
 
     ax.set_xlim([-R, R])
     ax.set_ylim([-R, R])
