@@ -88,7 +88,7 @@ def plot_spherical_caps_on_sphere(R, num_caps, vector=np.array([0, 0, 1])):
     cap_height = optimize_cap_height(R, num_caps)
 
     for center in cap_centers:
-        phi = np.linspace(0, np.pi / 2, 30)
+        phi = np.linspace(0, np.arccos(cap_height / R), 30)
         theta = np.linspace(0, 2 * np.pi, 30)
         phi, theta = np.meshgrid(phi, theta)
 
@@ -121,7 +121,7 @@ def plot_half_spherical_caps(R, num_caps, vector=np.array([0, 0, 1])):
     for c_num in range(num_caps):
         if c_num % 2 == 0: continue
         center = cap_centers[c_num]
-        phi = np.linspace(0, np.pi / 2, 30)
+        phi = np.linspace(0, np.arccos(cap_height / R), 30)
         theta = np.linspace(0, 2 * np.pi, 30)
         phi, theta = np.meshgrid(phi, theta)
 
@@ -143,8 +143,6 @@ def plot_half_spherical_caps(R, num_caps, vector=np.array([0, 0, 1])):
     ax.set_zlim([-R, R])
     ax.set_aspect('auto')
     plt.show()
-
-
 
 def main():
     R = 1.0  # Change the radius of the sphere here
