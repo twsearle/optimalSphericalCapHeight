@@ -2,27 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
-def cap_surface_area(R, h):
-    return 2 * np.pi * R * h
-
-def total_surface_area_of_caps(R, h, num_caps):
-    return num_caps * cap_surface_area(R, h)
-
-def optimize_cap_height(R, num_caps, tolerance=1e-6):
-    h_min = 0.0
-    h_max = R
-    h_mid = (h_min + h_max) / 2.0
-    
-    while h_max - h_min > tolerance:
-        h_mid = (h_min + h_max) / 2.0
-        total_area = total_surface_area_of_caps(R, h_mid, num_caps)
-        
-        if total_area > 4 * np.pi * R * R:
-            h_max = h_mid
-        else:
-            h_min = h_mid
-    
-    return h_mid
+from optimalSphericalCapHeight import optimize_cap_height
 
 def spherical_cap_coordinates(R, num_caps):
     cap_height = optimize_cap_height(R, num_caps)
