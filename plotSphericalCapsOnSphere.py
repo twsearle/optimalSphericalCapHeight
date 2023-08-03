@@ -62,30 +62,6 @@ def spherical_cap_coordinates(R, num_caps):
 
     return np.array(cap_centers)
 
-def plot_spherical_caps(R, num_caps):
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-
-    cap_centers = spherical_cap_coordinates(R, num_caps)
-    cap_height = optimize_cap_height(R, num_caps)
-
-    for center in cap_centers:
-        phi = np.linspace(0, np.pi / 2, 30)
-        theta = np.linspace(0, 2 * np.pi, 30)
-        phi, theta = np.meshgrid(phi, theta)
-
-        x = center[0] + R * np.sin(phi) * np.cos(theta)
-        y = center[1] + R * np.sin(phi) * np.sin(theta)
-        z = center[2] + R * np.cos(phi)
-
-        ax.plot_surface(x, y, z, color='b', alpha=0.4)
-
-    ax.set_xlim([-R, R])
-    ax.set_ylim([-R, R])
-    ax.set_zlim([-R, R])
-    ax.set_aspect('auto')
-    plt.show()
-
 def rotation_matrix_from_vectors(vec1, vec2):
     """Calculate the rotation matrix that rotates vec1 to vec2."""
     # Ensure that the vectors are unit vectors (normalized)
@@ -127,7 +103,40 @@ def plot_spherical_caps_on_sphere(R, num_caps, vector=np.array([0, 0, 1])):
         # Rotate the cap coordinates
         x_rot, y_rot, z_rot = np.einsum('ij,jkl->ikl', rotation_matrix, np.array([x, y, z]))
 
-        ax.plot_surface(x_rot, y_rot, z_rot, color='b', alpha=0.4)
+        ax.plot_surface(x_rot, y_rot, z_rot, alpha=0.2)
+
+    ax.set_xlim([-R, R])
+    ax.set_ylim([-R, R])
+    ax.set_zlim([-R, R])
+    ax.set_aspect('auto')
+    plt.show()
+
+def plot_half_spherical_caps(R, num_caps, vector=np.array([0, 0, 1])):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    cap_centers = spherical_cap_coordinates(R, num_caps)
+    cap_height = optimize_cap_height(R, num_caps)
+
+    for c_num in range(num_caps):
+        if c_num % 2 == 0: continue
+        center = cap_centers[c_num]
+        phi = np.linspace(0, np.pi / 2, 30)
+        theta = np.linspace(0, 2 * np.pi, 30)
+        phi, theta = np.meshgrid(phi, theta)
+
+        x = R * np.sin(phi) * np.cos(theta)
+        y = R * np.sin(phi) * np.sin(theta)
+        z = R * np.cos(phi)
+
+        # Calculate the rotation matrix to align the cap with the vector
+        cap_normal = center / np.linalg.norm(center)
+        rotation_matrix = rotation_matrix_from_vectors(cap_normal, vector)
+
+        # Rotate the cap coordinates
+        x_rot, y_rot, z_rot = np.einsum('ij,jkl->ikl', rotation_matrix, np.array([x, y, z]))
+
+        ax.plot_surface(x_rot, y_rot, z_rot, alpha=0.2)
 
     ax.set_xlim([-R, R])
     ax.set_ylim([-R, R])
@@ -136,11 +145,13 @@ def plot_spherical_caps_on_sphere(R, num_caps, vector=np.array([0, 0, 1])):
     plt.show()
 
 
+
 def main():
     R = 1.0  # Change the radius of the sphere here
     num_caps = 4  # Change the number of caps here
 
     plot_spherical_caps_on_sphere(R, num_caps)
+    plot_half_spherical_caps(R, num_caps)
 
 if __name__ == "__main__":
     main()
