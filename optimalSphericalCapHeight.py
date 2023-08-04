@@ -7,6 +7,19 @@ def total_surface_area_of_caps(R, h, num_caps):
     return num_caps * spherical_cap_surface_area(R, h)
 
 def optimize_cap_height(R, num_caps, tolerance=1e-6):
+    if num_caps == 4:
+        # this case has an arclength of 2*theta*r
+        # where theta is the rotation required to map a vertex to a face center
+        # i.e +60 degrees in xy plane and +30 degrees in z plane
+        #theta = math.acos((3./8.)*math.sqrt(3.) - (1./4.))
+        #theta = math.asin((1.25/2.)) # via trig (still wrong)
+        theta = math.asin(0.745) # by trial and error
+        L = 2*theta*R
+        return R*(1 - math.cos(theta))
+    else:
+        return minimum_viable_cap_height(R, num_caps, tolerance=1e-6)
+
+def minimum_viable_cap_height(R, num_caps, tolerance=1e-6):
     h_min = 0.0
     h_max = R
     h_mid = (h_min + h_max) / 2.0
